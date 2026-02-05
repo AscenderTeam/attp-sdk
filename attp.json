@@ -1,0 +1,10 @@
+{
+  "node": {
+    "name": "main",
+    "bind": "0.0.0.0:6563"
+  },
+  "caps": ["schema/msgpack", "streaming"],
+  "peers": [
+    "attp://secondservice.local"
+  ]
+}
