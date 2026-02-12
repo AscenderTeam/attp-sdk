@@ -47,7 +47,10 @@ class AttpFrameDTO(BaseDTO):
         obj : bytes
             Binary packed by Message Pack object.
         """
-        obj = msgpack.unpackb(obj, **(mp_configs or {}))
+        unpack_configs = {"raw": False}
+        if mp_configs:
+            unpack_configs.update(mp_configs)
+        obj = msgpack.unpackb(obj, **unpack_configs)
         
         return cls.model_validate(obj, strict=strict, from_attributes=from_attributes, context=context, by_alias=by_alias, by_name=by_name)
     
@@ -59,4 +62,7 @@ class AttpFrameDTO(BaseDTO):
         
         Opposite method: `mps(...)`
         """
-        return msgpack.packb(self.model_dump(mode="json", **kwargs), **(mp_configs or {}))
+        pack_configs = {"use_bin_type": True}
+        if mp_configs:
+            pack_configs.update(mp_configs)
+        return msgpack.packb(self.model_dump(mode="json", **kwargs), **pack_configs)

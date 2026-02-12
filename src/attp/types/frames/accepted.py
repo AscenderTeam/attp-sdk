@@ -5,4 +5,4 @@ from attp.types.frames.ready import IReadyDTO
 
 
 class IAcceptedDTO(IReadyDTO):
-    server_time: Annotated[str | None, Doc("Server time in an ISO format.")]
+    server_time: Annotated[str, Doc("Server time in an ISO format.")]

@@ -13,6 +13,7 @@ class AttpRouteMapping:
     route_id: int
     route_type: RouteType
     callback: Any
+    namespace: str
 
     def __eq__(self, value: object) -> bool:
         if isinstance(value, AttpRouteMapping):
