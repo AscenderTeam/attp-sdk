@@ -1,0 +1,22 @@
+{
+  "node": {
+    "name": "peer-1",
+    "bind": "0.0.0.0:6564"
+  },
+  "caps": ["schema/msgpack", "streaming"],
+  "client": {
+    "auth": {
+      "mode": "hmac",
+      "secret": { "env": "ATTP_SHARED_SECRET" },
+      "node_id": "peer-1",
+      "ttl_seconds": 30,
+      "max_clock_skew": 5
+    }
+  },
+  "services": {
+    "balancer": {
+      "strategy": "round-robin"
+    },
+    "peers": []
+  }
+}

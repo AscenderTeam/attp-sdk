@@ -1,0 +1,26 @@
+{
+  "node": {
+    "name": "main",
+    "bind": "0.0.0.0:6563"
+  },
+  "caps": ["schema/msgpack", "streaming"],
+  "client": {
+    "auth": {
+      "mode": "hmac",
+      "secret": { "env": "ATTP_SHARED_SECRET" },
+      "node_id": "main",
+      "ttl_seconds": 30,
+      "max_clock_skew": 5
+    }
+  },
+  "services": {
+    "balancer": {
+      "strategy": "round-robin"
+    }, // Optional
+    "peers": [
+      { "namespace": "peer-1", "uri": "attp://127.0.0.1" },
+      { "namespace": "peer-1", "uri": "attp://127.0.0.1:6345" }
+      // { "namespace": "peer-2", "uri": "attp://127.0.0.1:6565" }
+    ]
+  }
+}
