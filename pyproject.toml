@@ -3,7 +3,8 @@ name = "attp-sdk"
 version = "0.1.0"
 description = "attp-sdk"
 authors = [
-    {name = "Zahcoder34",email = "Zakhriw@gmail.com"}
+    {name = "Zahcoder34",email = "Zakhriw@gmail.com"},
+    {name = "AscenderTeam",email = "team@ascender.space"},
 ]
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
@@ -11,6 +12,12 @@ dependencies = [
     "ascender-framework (>=2.0.4,<3.0.0)",
     "attp-core (>=0.2.4,<0.3.0)",
     "msgpack (>=1.1.2,<2.0.0)",
+]
+
+[tool.poetry]
+package-mode = true
+packages = [
+    { include = "attp", from = "src" }
 ]
 
 
