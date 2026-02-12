@@ -2,7 +2,7 @@
 
   <!-- Logo Placeholder -->
   <img src="assets/logo.png" alt="attp-sdk" width="200" height="auto" />
-  <h1>attp-sdk</h1>
+  <h1>ATTP Software Development Kit</h1>
 
   <!-- Typing SVG -->
   <a href="https://git.io/typing-svg">
