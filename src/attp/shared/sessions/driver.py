@@ -2,17 +2,15 @@ from abc import abstractmethod
 import asyncio
 from logging import Logger
 import traceback
-from typing import Any, Callable, Self
+from typing import Any, Callable, Literal, Self
 
 from ascender.core import inject
 
-from attp.server.abc.auth_strategy import AuthStrategy
 from attp.shared.receiver import AttpReceiver
 
 from attp_core.rs_api import Session, PyAttpMessage, AttpCommand
 
 from attp.shared.utils.qsequence import QSequence
-from attp.types.frames.auth import IAuthDTO
 from attp.types.frames.ready import IReadyDTO
 
 
@@ -23,6 +21,7 @@ class AttpSessionDriver:
     
     incoming_listener: asyncio.Queue[PyAttpMessage | None]
     _loop: asyncio.AbstractEventLoop
+    _role: Literal["server", "client"]
     
     def __init__(
         self,
@@ -60,6 +59,25 @@ class AttpSessionDriver:
     @property
     def version(self):
         return self._version or "1.0"
+    
+    @property
+    def role(self):
+        return self._role
+
+    def version_bytes(self) -> bytes:
+        version = str(self.version)
+        parts = version.split(".")
+        try:
+            major = int(parts[0])
+        except Exception:
+            major = 1
+        try:
+            minor = int(parts[1]) if len(parts) > 1 else 0
+        except Exception:
+            minor = 0
+        major = max(0, min(255, major))
+        minor = max(0, min(255, minor))
+        return bytes([major, minor])
 
     async def listen(self, receiver: AttpReceiver[tuple["AttpSessionDriver", PyAttpMessage]]):
         self.logger.debug("[cyan]ATTP[/] ┆ Running listener for session %s", self.session_id)
@@ -71,14 +89,14 @@ class AttpSessionDriver:
             self.logger.debug("[cyan]ATTP[/] ┆ Emitting the incoming frame in the listener to responder...")
             receiver.on_next((self, frame))
 
+    @abstractmethod
+    async def start(self):
+        ...
+
     # ================== Encapsulated operative methods (abstract) ================== #
     @abstractmethod
     async def _on_event(self, events: list[PyAttpMessage]):
         pass
-    
-    @abstractmethod
-    async def _authenticate(self, frame: IAuthDTO):
-        ...
     
     # ================== Encapsulated operative methods (final) ================== #
     def _register_connection(self, frame: IReadyDTO):
@@ -150,3 +168,30 @@ class LifecyclesMixin(AttpSessionDriver):
         self._enqueue_incoming(None)
         
         self._session.stop_listener()
+    
+
+class SessionTerminatorMixin(LifecyclesMixin, FrameTransmitterMixin):
+    async def close(self) -> None:
+        if self._session:
+            self.stop_listener()
+            await self.send_frame(PyAttpMessage(
+                route_id=0,
+                command_type=AttpCommand.DISCONNECT,
+                correlation_id=None,
+                payload=None,
+                version=b"01"
+            ))
+            self._session.disconnect()
+
+        await self._terminate()
+        del self._session
+        self._session = None
+        self.auth_flag.clear()
+
+
+__all__ = [
+    "AttpSessionDriver",
+    "FrameTransmitterMixin",
+    "LifecyclesMixin",
+    "SessionTerminatorMixin"
+]
