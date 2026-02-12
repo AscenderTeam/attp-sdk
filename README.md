@@ -1,7 +1,7 @@
 <div align="center">
 
   <!-- Logo Placeholder -->
-  <img src="assets/logo.png" alt="attp-sdk" width="200" height="auto" />
+  <img src="https://github.com/AscenderTeam/attp-sdk/blob/main/assets/logo.png?raw=true" alt="attp-sdk" width="200" height="auto" />
   <h1>ATTP Software Development Kit</h1>
 
   <!-- Typing SVG -->

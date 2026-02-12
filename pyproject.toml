@@ -1,11 +1,12 @@
 [project]
 name = "attp-sdk"
-version = "0.1.0"
-description = "attp-sdk"
+version = "0.1.2"
+description = "A universal inter-service communication protocol based on ATTP-core which was firstly designed for tool calling."
 authors = [
     {name = "Zahcoder34",email = "Zakhriw@gmail.com"},
     {name = "AscenderTeam",email = "team@ascender.space"},
 ]
+repository = "https://github.com/AscenderTeam/attp-sdk"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [
