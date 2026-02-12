@@ -9,5 +9,5 @@ class AuthStrategy(ABC):
     async def authenticate(self, namespace: str, frame: Any) -> bool:
         ...
 
-    async def on_read(self, namespace: str, frame) -> Any:
+    async def on_ready(self, namespace: str, frame) -> Any:
         return None
